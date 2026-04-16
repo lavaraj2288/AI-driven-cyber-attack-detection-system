@@ -1,0 +1,183 @@
+{% extends 'RUser/Header.html' %}
+{% block userblock %}
+{% load static %}
+
+<link rel="icon" href="{% static 'images/icon.png' %}" type="image/x-icon">
+<link href="https://fonts.googleapis.com/css?family=Lobster|Righteous|Fredoka+One&display=swap" rel="stylesheet">
+
+<style>
+  body {
+    background-color: #000;
+    font-family: 'Roboto', sans-serif;
+    color: #fff;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  .scroll-wrapper {
+    height: calc(100vh - 80px);
+    overflow-y: auto;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 20px 0;
+  }
+
+  .container-custom {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    max-width: 1200px;
+    width: 95%;
+  }
+
+  h2 {
+    font-family: 'Fredoka One', cursive;
+    color: #00BFFF;
+    text-align: center;
+    margin-bottom: 25px;
+  }
+
+  label {
+    font-weight: bold;
+    color: #00BFFF;
+    font-size: 1rem;
+  }
+
+  input, select {
+    width: 100%;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    margin-bottom: 15px;
+  }
+
+  .btn-predict {
+    background-color: #00BFFF;
+    color: #fff;
+    font-weight: bold;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    width: 100%;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+
+  .btn-predict:hover {
+    background-color: #009ACD;
+  }
+
+  .result-box {
+    background-color: #fff;
+    color: #00BFFF;
+    font-size: 20px;
+    font-family: fantasy;
+    text-align: center;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 20px;
+    border: 2px solid #00BFFF;
+  }
+
+  .scroll-wrapper::-webkit-scrollbar {
+    width: 8px;
+  }
+  .scroll-wrapper::-webkit-scrollbar-thumb {
+    background-color: #28a745;
+    border-radius: 10px;
+  }
+  .scroll-wrapper::-webkit-scrollbar-thumb:hover {
+    background-color: #cc0000;
+  }
+</style>
+
+<div class="scroll-wrapper">
+  <div class="container container-custom">
+    <h2>PREDICTION OF CYBER ATTACK TYPE</h2>
+
+    <form method="POST">
+      {% csrf_token %}
+      <div class="row g-3">
+        
+        <!-- 1st column -->
+        <div class="col-lg-4 col-md-6 col-sm-12">
+          <label>Fid</label>
+          <input type="text" name="Fid" value="{{ Fid|default:'' }}">
+          <label>Source IP Address</label>
+          <input type="text" name="Source_IP_Address" value="{{ Source_IP_Address|default:'' }}">
+          <label>Source Port</label>
+          <input type="text" name="Source_Port" value="{{ Source_Port|default:'' }}">
+          <label>Protocol</label>
+          <select name="Protocol">
+            <option {% if not Protocol %}selected{% endif %}>---Select---</option>
+            <option {% if Protocol == "TCP" %}selected{% endif %}>TCP</option>
+            <option {% if Protocol == "UDP" %}selected{% endif %}>UDP</option>
+            <option {% if Protocol == "ICMP" %}selected{% endif %}>ICMP</option>
+          </select>
+          <label>Packet Type</label>
+          <input type="text" name="Packet_Type" value="{{ Packet_Type|default:'' }}">
+          <label>Payload Data</label>
+          <input type="text" name="Payload_Data" value="{{ Payload_Data|default:'' }}">
+          <label>Anomaly Scores</label>
+          <input type="text" name="Anomaly_Scores" value="{{ Anomaly_Scores|default:'' }}">
+          <label>Attack Signature</label>
+          <input type="text" name="Attack_Signature" value="{{ Attack_Signature|default:'' }}">
+        </div>
+
+        <!-- 2nd column -->
+        <div class="col-lg-4 col-md-6 col-sm-12">
+          <label>Severity Level</label>
+          <input type="text" name="Severity_Level" value="{{ Severity_Level|default:'' }}">
+          <label>Network Segment</label>
+          <input type="text" name="Network_Segment" value="{{ Network_Segment|default:'' }}">
+          <label>Proxy Information</label>
+          <input type="text" name="Proxy_Information" value="{{ Proxy_Information|default:'' }}">
+          <label>IDS/IPS Alerts</label>
+          <input type="text" name="IDS_IPS_Alerts" value="{{ IDS_IPS_Alerts|default:'' }}">
+          <label>Timestamp</label>
+          <input type="text" name="Timestamp" value="{{ Timestamp|default:'' }}">
+          <label>Destination IP Address</label>
+          <input type="text" name="Destination_IP_Address" value="{{ Destination_IP_Address|default:'' }}">
+          <label>Destination Port</label>
+          <input type="text" name="Destination_Port" value="{{ Destination_Port|default:'' }}">
+          <label>Packet Length</label>
+          <input type="text" name="Packet_Length" value="{{ Packet_Length|default:'' }}">
+        </div>
+
+        <!-- 3rd column -->
+        <div class="col-lg-4 col-md-6 col-sm-12">
+          <label>Traffic Type</label>
+          <input type="text" name="Traffic_Type" value="{{ Traffic_Type|default:'' }}">
+          <label>Malware Indicators</label>
+          <input type="text" name="Malware_Indicators" value="{{ Malware_Indicators|default:'' }}">
+          <label>Alerts/Warnings</label>
+          <input type="text" name="Alerts_Warnings" value="{{ Alerts_Warnings|default:'' }}">
+          <label>Action Taken</label>
+          <input type="text" name="Action_Taken" value="{{ Action_Taken|default:'' }}">
+          <label>Device Information</label>
+          <input type="text" name="Device_Information" value="{{ Device_Information|default:'' }}">
+          <label>Geo City Location Data</label>
+          <input type="text" name="Geo_City_location_Data" value="{{ Geo_City_location_Data|default:'' }}">
+          <label>Firewall Logs</label>
+          <input type="text" name="Firewall_Logs" value="{{ Firewall_Logs|default:'' }}">
+          <label>Log Source</label>
+          <input type="text" name="Log_Source" value="{{ Log_Source|default:'' }}">
+        </div>
+      </div>
+
+      <button type="submit" class="btn-predict">Predict</button>
+    </form>
+
+    {% if objs %}
+      <div class="result-box mt-3">
+        <strong>PREDICTED CYBER ATTACK TYPE:</strong>
+        <span style="color: green; font-weight: bold; font-family: 'Times New Roman', Times, serif;">{{ objs }}</span>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}

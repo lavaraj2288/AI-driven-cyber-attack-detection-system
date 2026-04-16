@@ -1,0 +1,138 @@
+{% extends 'SProvider/Header.html' %}
+{% block researchblock %}
+{% load static %}
+
+<link rel="icon" href="{% static 'images/icon.png' %}" type="image/x-icon" />
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css?family=Lobster" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Righteous" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Fredoka+One" rel="stylesheet">
+
+<style>
+    body {
+        background-color: #000;
+        color: #fff;
+        margin: 0;
+        font-family: 'Righteous', cursive;
+    }
+
+    .navbar {
+        background-color: #584b4f;
+        height: 80px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 40px;
+        color: white;
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    .navbar a {
+        color: white;
+        text-decoration: none;
+        margin: 0 15px;
+        font-family: 'Fredoka One', cursive;
+        transition: 0.3s;
+    }
+
+    .navbar a:hover {
+        color: #FFD700;
+    }
+
+    .container-fluid {
+        padding: 50px 20px;
+    }
+
+    .container {
+        background-color: white;
+        color: black;
+        padding: 40px;
+        border-radius: 12px;
+        box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+        max-width: 1000px;
+        margin: auto;
+    }
+
+    #title {
+        font-family: 'Fredoka One', cursive;
+        color: #333;
+    }
+
+    .tweettext {
+        border: 2px solid yellowgreen;
+        width: 100%;
+        height: 400px;
+        overflow-y: auto;
+        background-color: #fafafa;
+        padding: 15px;
+        border-radius: 8px;
+    }
+
+    .style1 {
+        color: #FF0000;
+        font-weight: bold;
+    }
+
+    .style4, .style5 {
+        color: #FFFF00;
+        font-weight: bold;
+    }
+
+    hr {
+        border: 1px solid #ccc;
+    }
+
+    @media (max-width: 768px) {
+        .navbar {
+            flex-direction: column;
+            height: auto;
+            padding: 15px;
+        }
+
+        .navbar a {
+            margin: 8px 0;
+            font-size: 18px;
+        }
+
+        .container {
+            padding: 20px;
+        }
+
+        .tweettext {
+            height: 300px;
+        }
+    }
+
+</style>
+
+<body>
+    <div class="navbar">
+        <div class="navbar-brand">Cyber Analysis Panel</div>
+        <div class="navbar-links">
+            <a href="{% url 'index' %}">Home</a>
+            <a href="{% url 'View_Prediction_Of_Cyber_Attack_Type' %}">Predictions</a>
+            <a href="{% url 'charts1' 'pie' %}">Charts</a>
+            <a href="{% url 'logout' %}">Logout</a>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="container">
+            <h2 id="title" class="text-center text-uppercase">Tweet Analysis</h2>
+            <hr>
+            <form method="POST">
+                {% csrf_token %}
+                <fieldset>
+                    <p class="text-uppercase pull-center style1">!!!</p>
+                    <div class="tweettext">
+                        <!-- Your dynamic tweet content goes here -->
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</body>
+
+{% endblock %}

@@ -1,0 +1,122 @@
+{% extends 'SProvider/Header.html' %}
+{% block researchblock %}
+
+<style>
+  .container {
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+  }
+
+  .style1 {
+    color: #0000FF;
+    font-weight: bold;
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+
+  .table-container {
+    border: 2px solid #28a745;
+    border-radius: 8px;
+    overflow-x: auto;
+    width: 100%;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+  }
+
+  th, td {
+    border: 1px solid #ddd;
+    padding: 12px;
+  }
+
+  th {
+    background-color: #0000FF;
+    color: yellow;
+    font-weight: bold;
+  }
+
+  tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+
+  .status-blocked {
+    color: red;
+    font-weight: bold;
+  }
+
+  .status-detected {
+    color: orange;
+    font-weight: bold;
+  }
+
+  .status-warning {
+    color: brown;
+    font-weight: bold;
+  }
+
+  /* Alert styling */
+  .row-alert {
+    background-color: #ffe6e6 !important;
+    border-left: 5px solid red;
+  }
+  
+  .alert-icon {
+    color: red;
+    font-size: 1.2rem;
+    margin-right: 5px;
+  }
+</style>
+
+<div class="container">
+  <p class="style1">⚠️ Security Attack Logs ⚠️</p>
+  <hr>
+
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>IP Address</th>
+          <th>Action / Detail</th>
+          <th>Attack Type</th>
+          <th>Status</th>
+          <th>Timestamp</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for log in logs %}
+        <tr class="{% if log.is_alert %}row-alert{% endif %}">
+          <td>{{ log.id }}</td>
+          <td>{{ log.ip_address }}</td>
+          <td>
+            {% if log.is_alert %}<span class="alert-icon">‼️</span>{% endif %}
+            {{ log.action }}
+          </td>
+          <td>{{ log.attack_type }}</td>
+          <td class="{% if log.status == 'Blocked' %}status-blocked{% elif log.status == 'Detected' %}status-detected{% else %}status-warning{% endif %}">
+            {{ log.status }}
+          </td>
+          <td>{{ log.timestamp }}</td>
+          <td>
+            <a href="{% url 'delete_attack_log' log.id %}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this log?')">Delete</a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="7">No attacks detected yet. System is safe.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}

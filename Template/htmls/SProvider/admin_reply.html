@@ -1,0 +1,34 @@
+{% extends 'SProvider/Header.html' %}
+{% block researchblock %}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-dark text-white">
+                    <h4 class="mb-0">Reply to {{ query.user.username }}</h4>
+                </div>
+                <div class="card-body">
+                    <div class="mb-4">
+                        <label class="text-muted small">USER MESSAGE:</label>
+                        <p class="p-3 bg-light border rounded">{{ query.message }}</p>
+                    </div>
+
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="form-group mb-3">
+                            <label class="font-weight-bold">YOUR REPLY (This will overwrite the AI response):</label>
+                            <textarea name="reply" class="form-control" rows="5" required>{{ query.response }}</textarea>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'view_user_queries' %}" class="btn btn-secondary">Back</a>
+                            <button type="submit" class="btn btn-primary">Send Reply</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

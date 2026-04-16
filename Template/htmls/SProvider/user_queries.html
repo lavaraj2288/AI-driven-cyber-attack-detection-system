@@ -1,0 +1,56 @@
+{% extends 'SProvider/Header.html' %}
+{% block researchblock %}
+
+<div class="container mt-5">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h3 class="mb-0">User Queries & Support</h3>
+        </div>
+        <div class="card-body">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+            
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>User</th>
+                            <th>Message</th>
+                            <th>Current Response</th>
+                            <th>Time</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for q in queries %}
+                        <tr>
+                            <td><strong>{{ q.user.username }}</strong></td>
+                            <td>{{ q.message }}</td>
+                            <td>
+                                {% if q.response %}
+                                    <span class="text-success">{{ q.response|truncatewords:10 }}</span>
+                                {% else %}
+                                    <span class="text-danger">No Response Yet</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ q.timestamp|date:"M d, H:i" }}</td>
+                            <td>
+                                <a href="{% url 'admin_reply' q.id %}" class="btn btn-sm btn-outline-primary">Reply</a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center text-muted">No messages found.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

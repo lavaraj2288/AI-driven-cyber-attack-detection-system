@@ -1,0 +1,246 @@
+{% extends 'SProvider/Header.html' %}
+{% block researchblock %}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link href="https://fonts.googleapis.com/css?family=Lobster|Righteous" rel="stylesheet">
+
+<style>
+  html, body {
+    font-family: 'Righteous', cursive;
+    background-color: #f4f7f6;
+  }
+
+  .main-content {
+    padding-top: 100px;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+  }
+
+  .container-graph {
+    background-color: white;
+    padding: 40px;
+    width: 95%;
+    max-width: 1000px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    margin-bottom: 50px;
+  }
+
+  .title-graph {
+    color: #0000FF;
+    font-family: 'Lobster', cursive;
+    font-size: 32px;
+    text-align: center;
+    margin-bottom: 30px;
+    border-bottom: 3px double #0000FF;
+    padding-bottom: 10px;
+  }
+
+  .chart-wrapper {
+    position: relative;
+    height: 450px;
+    width: 100%;
+    margin-bottom: 40px;
+  }
+
+  .stats-table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+  }
+
+  .stats-table th {
+    background-color: #0000FF;
+    color: white;
+    padding: 15px;
+    font-size: 18px;
+    text-transform: uppercase;
+  }
+
+  .stats-table td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: center;
+    font-size: 17px;
+  }
+
+  .stats-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+
+  .stats-table tr:hover {
+    background-color: #f1f1f1;
+  }
+</style>
+
+<div class="main-content">
+  <div class="container-graph">
+    <h2 class="title-graph">Security Attack Analysis & Frequency Graph</h2>
+    
+    <div class="chart-wrapper">
+      <canvas id="attackChart"></canvas>
+    </div>
+
+    <table class="stats-table">
+        <thead>
+            <tr>
+                <th>Attack Category</th>
+                <th>Incident Count</th>
+                <th>Severity Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td style="color: red; font-weight: bold;">DDoS Attacks</td>
+                <td id="ddos-count">{{ ddos }}</td>
+                <td><span style="color: darkred;">High Risk</span></td>
+            </tr>
+            <tr>
+                <td style="color: orange; font-weight: bold;">Brute Force</td>
+                <td id="brute-count">{{ brute }}</td>
+                <td><span style="color: orange;">Medium Risk</span></td>
+            </tr>
+            <tr>
+                <td style="color: blue; font-weight: bold;">Unauthorized Intrusion</td>
+                <td id="intrusion-count">{{ intrusion }}</td>
+                <td><span style="color: blue;">Security Breach</span></td>
+            </tr>
+            <tr>
+                <td style="color: purple; font-weight: bold;">Suspicious Activity</td>
+                <td id="suspicious-count">{{ suspicious }}</td>
+                <td><span style="color: purple;">Monitored</span></td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr style="background-color: #eee; font-weight: bold;">
+                <td>TOTAL SECURITY EVENTS</td>
+                <td id="total-count">{{ ddos|add:brute|add:intrusion|add:suspicious }}</td>
+                <td>Verified Logs</td>
+            </tr>
+        </tfoot>
+    </table>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const ctx = document.getElementById('attackChart').getContext('2d');
+    
+    // Gradient definitions
+    const gradientDDoS = ctx.createLinearGradient(0, 0, 0, 400);
+    gradientDDoS.addColorStop(0, 'rgba(255, 99, 132, 0.9)');
+    gradientDDoS.addColorStop(1, 'rgba(255, 99, 132, 0.3)');
+
+    const gradientBrute = ctx.createLinearGradient(0, 0, 0, 400);
+    gradientBrute.addColorStop(0, 'rgba(255, 159, 64, 0.9)');
+    gradientBrute.addColorStop(1, 'rgba(255, 159, 64, 0.3)');
+
+    const gradientIntrusion = ctx.createLinearGradient(0, 0, 0, 400);
+    gradientIntrusion.addColorStop(0, 'rgba(54, 162, 235, 0.9)');
+    gradientIntrusion.addColorStop(1, 'rgba(54, 162, 235, 0.3)');
+
+    const gradientSuspicious = ctx.createLinearGradient(0, 0, 0, 400);
+    gradientSuspicious.addColorStop(0, 'rgba(153, 102, 255, 0.9)');
+    gradientSuspicious.addColorStop(1, 'rgba(153, 102, 255, 0.3)');
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['DDoS', 'Brute Force', 'Intrusion', 'Suspicious'],
+            datasets: [{
+                label: 'Global Security Incidents',
+                data: [{{ ddos }}, {{ brute }}, {{ intrusion }}, {{ suspicious }}],
+                backgroundColor: [gradientDDoS, gradientBrute, gradientIntrusion, gradientSuspicious],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(255, 159, 64, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(153, 102, 255, 1)'
+                ],
+                borderWidth: 2,
+                borderRadius: 5,
+                barThickness: 60
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            animation: {
+                duration: 2000,
+                easing: 'easeOutQuart'
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: 'rgba(0,0,0,0.05)'
+                    },
+                    ticks: {
+                        stepSize: 1,
+                        font: {
+                            size: 14,
+                            weight: 'bold'
+                        }
+                    },
+                    title: {
+                        display: true,
+                        text: 'Number of Attempts Detected',
+                        font: {
+                            size: 16,
+                            weight: 'bold'
+                        }
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    },
+                    ticks: {
+                        font: {
+                            size: 14,
+                            weight: 'bold'
+                        }
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(0,0,0,0.8)',
+                    titleFont: { size: 16 },
+                    bodyFont: { size: 14 },
+                    padding: 10,
+                    cornerRadius: 8
+                }
+            }
+        }
+    });
+
+    // AJAX Polling for Real-Time Updates
+    setInterval(function() {
+        fetch("{% url 'get_attack_counts' %}")
+            .then(response => response.json())
+            .then(data => {
+                // Update Chart Data
+                attackChart.data.datasets[0].data = [data.brute, data.ddos, data.intrusion, data.suspicious];
+                attackChart.update();
+
+                // Update Table Data
+                document.getElementById('ddos-count').innerText = data.ddos;
+                document.getElementById('brute-count').innerText = data.brute;
+                document.getElementById('intrusion-count').innerText = data.intrusion;
+                document.getElementById('suspicious-count').innerText = data.suspicious;
+                
+                let total = data.ddos + data.brute + data.intrusion + data.suspicious;
+                document.getElementById('total-count').innerText = total;
+            });
+    }, 3000); // 3 seconds
+});
+</script>
+
+{% endblock %}

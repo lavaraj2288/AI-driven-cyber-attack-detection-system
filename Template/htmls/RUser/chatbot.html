@@ -1,0 +1,126 @@
+{% extends 'RUser/Header.html' %}
+{% block userblock %}
+
+<style>
+    .chat-container {
+        max-width: 800px;
+        margin: 20px auto;
+        background: #fff;
+        border-radius: 15px;
+        box-shadow: 0 5px 25px rgba(0,0,0,0.1);
+        display: flex;
+        flex-direction: column;
+        height: 70vh;
+    }
+    .chat-header {
+        background: #28a745;
+        color: white;
+        padding: 15px 25px;
+        border-radius: 15px 15px 0 0;
+        font-weight: bold;
+        font-size: 1.2rem;
+    }
+    .chat-messages {
+        flex: 1;
+        overflow-y: auto;
+        padding: 20px;
+        background: #f8f9fa;
+    }
+    .message {
+        margin-bottom: 20px;
+        max-width: 80%;
+    }
+    .user-message {
+        margin-left: auto;
+        background: #28a745;
+        color: white;
+        padding: 10px 15px;
+        border-radius: 15px 15px 0 15px;
+    }
+    .ai-message {
+        margin-right: auto;
+        background: #e9ecef;
+        color: #333;
+        padding: 10px 15px;
+        border-radius: 15px 15px 15px 0;
+        border: 1px solid #dee2e6;
+    }
+    .chat-input {
+        padding: 20px;
+        border-top: 1px solid #dee2e6;
+        display: flex;
+        gap: 10px;
+    }
+    .chat-input input {
+        flex: 1;
+        border-radius: 25px;
+        padding: 10px 20px;
+        border: 1px solid #ced4da;
+    }
+    .chat-input button {
+        border-radius: 25px;
+        padding: 10px 25px;
+    }
+</style>
+
+<div class="chat-container">
+    <div class="chat-header d-flex justify-content-between align-items-center">
+        <span><i class="fas fa-robot mr-2"></i> AI Assistant</span>
+        <div class="d-flex gap-2">
+            <button class="btn btn-sm btn-info text-white" style="border-radius: 20px;" onclick="toggleHelp()">
+                <i class="bi bi-question-circle"></i> Help
+            </button>
+            <a href="{% url 'index' %}" class="btn btn-sm btn-light" style="border-radius: 20px; font-weight: 600;">
+                <i class="bi bi-house-door"></i> Home
+            </a>
+        </div>
+    </div>
+    
+    <!-- Help Info Panel (Hidden by default) -->
+    <div id="help-panel" class="p-3 bg-light border-bottom" style="display: none;">
+        <h6 class="font-weight-bold"><i class="bi bi-info-circle text-info"></i> How to use this Portal:</h6>
+        <ul class="small mb-0">
+            <li><strong>AI Prediction:</strong> Use the "Predict Cyber Attack" link to test network traffic for threats.</li>
+            <li><strong>Chat Support:</strong> Type your security concerns here. Our AI responds instantly, and admins can provide follow-up replies.</li>
+            <li><strong>Security Alerts:</strong> Watch for popups if suspicious activity is detected from your IP.</li>
+        </ul>
+    </div>
+
+    <div class="chat-messages" id="chat-box">
+        {% for chat in chats %}
+        <div class="message user-message">
+            {{ chat.message }}
+            <small class="d-block text-right mt-1" style="opacity: 0.7;">{{ chat.timestamp|date:"H:i" }}</small>
+        </div>
+        {% if chat.response %}
+        <div class="message ai-message">
+            {{ chat.response }}
+            <small class="d-block mt-1 text-muted">{{ chat.timestamp|date:"H:i" }}</small>
+        </div>
+        {% endif %}
+        {% empty %}
+        <div class="text-center text-muted mt-5">
+            <p>Welcome! How can I help you today? Feel free to ask any security-related questions.</p>
+        </div>
+        {% endfor %}
+    </div>
+    <form class="chat-input" method="POST">
+        {% csrf_token %}
+        <input type="text" name="message" placeholder="Type your message here..." required>
+        <button type="submit" class="btn btn-success">Send</button>
+    </form>
+</div>
+
+<script>
+    // Scroll to bottom of chat
+    const chatBox = document.getElementById('chat-box');
+    chatBox.scrollTop = chatBox.scrollHeight;
+
+    function toggleHelp() {
+        const panel = document.getElementById('help-panel');
+        panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+    }
+</script>
+
+{% endblock %}
+

@@ -1,0 +1,154 @@
+{% extends 'SProvider/Header.html' %}
+{% block researchblock %}
+{% load static %}
+
+<link rel="icon" href="{% static 'images/icon.png' %}" type="image/x-icon">
+
+<style>
+    body {
+        background-color: #FFFFFF;
+        margin: 0;
+        font-family: Arial, sans-serif;
+    }
+
+    .topic {
+        width: 100%;
+        text-align: center;
+    }
+
+    .topic h1 {
+        color: white;
+        padding: 2px;
+        text-align: center;
+        border-style: none;
+        height: 100px;
+        width: 100%;
+        background-color: #584b4f;
+        line-height: 100px;
+    }
+
+    .sidemenu {
+        background-color: #f2f2f2;
+        padding: 20px;
+        width: 220px;
+        min-height: calc(100vh - 100px);
+        float: left;
+        margin-top: 0;
+        box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+    }
+
+    .sidemenu h3 {
+        margin: 30px 0;
+        font-size: 18px;
+    }
+
+    .sidemenu a {
+        text-decoration: none;
+        color: #000;
+        font-weight: bold;
+        display: block;
+        padding: 10px;
+        border-radius: 8px;
+        transition: 0.3s;
+    }
+
+    .sidemenu a:hover {
+        background-color: #584b4f;
+        color: white;
+    }
+
+    #chartContainer {
+        width: calc(100% - 260px);
+        margin-left: 240px;
+        margin-top: 50px;
+        height: 500px;
+    }
+
+    @media screen and (max-width: 992px) {
+        .sidemenu {
+            width: 180px;
+        }
+
+        #chartContainer {
+            width: calc(100% - 200px);
+            margin-left: 180px;
+        }
+    }
+
+    @media screen and (max-width: 768px) {
+        .sidemenu {
+            width: 100%;
+            float: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .sidemenu h3 {
+            margin: 10px;
+            font-size: 16px;
+        }
+
+        #chartContainer {
+            width: 95%;
+            margin: 20px auto;
+            position: relative;
+        }
+    }
+
+    @media screen and (max-width: 480px) {
+        .sidemenu a {
+            font-size: 14px;
+            padding: 8px;
+        }
+
+        #chartContainer {
+            height: 400px;
+        }
+    }
+</style>
+
+<script>
+window.onload = function() {
+    var chart = new CanvasJS.Chart("chartContainer", {
+        animationEnabled: true,
+        title: { text: "" },
+        data: [{
+            {% if dislike_chart == "bar" %}
+                type: "bar",
+            {% elif dislike_chart == "pie" %}
+                type: "pie",
+            {% elif dislike_chart == "spline" %}
+                type: "spline",
+            {% endif %}
+            startAngle: 240,
+            yValueFormatString: "##0.00\"%\"",
+            indexLabel: "{label} {y}",
+            dataPoints: [
+                {% for o in form %}
+                    {y: {{o.dcount}}, label: "{{o.names}}"},
+                {% endfor %}
+            ]
+        }]
+    });
+    chart.render();
+}
+</script>
+
+<body>
+<div class="topic">
+    <div class="sidemenu">
+        <h3>
+            <a href="{% url 'dislikeschart' 'pie' %}">PIE CHART</a>
+            <a href="{% url 'dislikeschart' 'bar' %}">BAR CHART</a>
+        </h3>
+    </div>
+
+    <div id="chartContainer" class="graph"></div>
+</div>
+
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+</body>
+
+{% endblock %}

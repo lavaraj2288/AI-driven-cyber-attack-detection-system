@@ -1,0 +1,175 @@
+{% extends 'SProvider/Header.html' %}
+{% block researchblock %}
+
+<style>
+  html,
+  body {
+    background: linear-gradient(135deg, #fdfbfb, #ebedee);
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    color: #333;
+    min-height: 100vh;
+  }
+
+  .main-content {
+    padding-top: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+  }
+
+  .container {
+    background: #fff;
+    padding: 40px 35px;
+    border-radius: 16px;
+    box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.09);
+    max-width: 800px;
+    width: 100%;
+    margin-bottom: 40px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  #title {
+    font-size: 28px;
+    font-weight: 700;
+    text-align: center;
+    color: #ff9800;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+  }
+
+  .table-container {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: auto;
+    border-radius: 12px;
+    border: 1px solid #eee;
+    background: none;
+    scrollbar-width: thin;
+    scrollbar-color: #ff9800 #fdfbfb;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #fff;
+  }
+
+  th {
+    background: #ff9800;
+    color: #fff;
+    text-align: center;
+    padding: 12px;
+    font-size: 14px;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  td {
+    text-align: center;
+    padding: 12px;
+    font-size: 15px;
+    color: #333;
+    background-color: #fff;
+    border-bottom: 1px solid #eee;
+  }
+
+  tr:hover td {
+    background-color: #f1fdf3;
+  }
+
+  tr:nth-child(even) td {
+    background-color: #f9f9f9;
+  }
+
+  .count-box {
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+    color: #555;
+    margin-bottom: 20px;
+  }
+
+  .count-box span {
+    color: #d9534f;
+    font-size: 18px;
+  }
+</style>
+
+<div class="main-content">
+  <div class="container">
+    <p id="title">Admin Setup</p>
+    
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 0 5px;">
+      <p class="count-box" style="margin: 0; font-size: 16px;">Total Admins: <span>{{ admins|length }}</span></p>
+      <a href="{% url 'register_admin' %}" class="btn" style="background-color: #ff9800; color: white; border-radius: 8px; font-weight: bold; text-decoration: none; padding: 8px 15px;">+ Add New Admin</a>
+    </div>
+
+    <div class="table-container">
+      {% if messages %}
+      {% for message in messages %}
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+      <script>
+        Swal.fire({
+          icon: '{{ message.tags }}' === 'error' ? 'error' : 'success',
+          title: '{{ message }}',
+          timer: 3000,
+          showConfirmButton: false
+        });
+      </script>
+      {% endfor %}
+      {% endif %}
+
+      <table>
+        <thead>
+          <tr>
+            <th>No.</th>
+            <th>Admin Username</th>
+            <th>Password Status</th>
+            <th>Status</th>
+            <th>Action</th>
+
+          </tr>
+        </thead>
+        <tbody>
+          {% for admin in admins %}
+          <tr>
+            <td>{{ forloop.counter }}</td>
+            <td style="font-weight: bold; color: #007bff;">{{ admin.username }}</td>
+            <td><span style="color: grey;">********</span></td>
+            <td>
+              {% if admin.is_blocked %}
+                <span class="badge bg-danger">Blocked</span>
+              {% else %}
+                <span class="badge bg-success">Active</span>
+              {% endif %}
+            </td>
+            <td>
+              {% if admin.is_blocked %}
+                <a href="{% url 'unblock_admin' admin.username %}" class="btn btn-warning btn-sm" style="padding: 5px 10px; border-radius: 5px; text-decoration: none;">Unblock</a>
+              {% endif %}
+              {% if admin.username == "lava" %}
+                <span class="badge" style="background-color: #ff9800; color: white; padding: 5px 10px; border-radius: 5px;">Master</span>
+              {% else %}
+                <a href="{% url 'delete_admin' admin.username %}" class="btn" style="background-color: #d9534f; color: white; padding: 5px 10px; border-radius: 5px; text-decoration: none;" onclick="return confirm('Are you sure you want to delete this admin?')">Delete</a>
+              {% endif %}
+            </td>
+
+          </tr>
+          {% empty %}
+          <tr style="display:none;">
+            <td colspan="4" style="color: #ff9800; font-weight: bold;">No Admins Found</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,166 @@
+{% extends 'SProvider/Header.html' %}
+{% block researchblock %}
+
+<link rel="icon" href="images/icon.png" type="image/x-icon" />
+<link href="https://fonts.googleapis.com/css?family=Lobster" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Righteous" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Fredoka+One" rel="stylesheet">
+
+<style>
+  body {
+    background-color: #000000;
+    overflow-x: hidden;
+    margin: 0;
+    font-family: 'Righteous', cursive;
+  }
+
+  .main-wrapper {
+    padding-top: 80px; /* navbar height fix */
+    width: 100%;
+    min-height: 100vh;
+  }
+
+  .container {
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+  }
+
+  .style1 {
+    color: #0000FF;
+    font-weight: bold;
+    text-align: center;
+    font-size: 22px;
+  }
+
+  .table-container {
+    border: 2px solid yellowgreen;
+    border-radius: 8px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    width: 100%;
+    max-height: 80vh;
+    margin-top: 20px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+    min-width: 1000px;
+  }
+
+  th, td {
+    border: 2px solid red;
+    padding: 8px 12px;
+  }
+
+  th {
+    background-color: #FFFFFF;
+    color: #000000;
+    font-weight: bold;
+    font-size: 16px;
+  }
+
+  td {
+    color: #000000;
+    font-family: fantasy;
+    font-size: 16px;
+    background-color: #FFFFFF;
+    word-break: break-word;
+  }
+
+  @media (max-width: 768px) {
+    .container {
+      padding: 15px;
+    }
+    th, td {
+      font-size: 13px;
+      padding: 6px;
+    }
+    .table-container {
+      max-height: 70vh;
+    }
+  }
+</style>
+
+<div class="main-wrapper">
+  <div class="container-fluid">
+    <div class="container">
+      <form role="form" method="POST">
+        {% csrf_token %}
+        <fieldset>
+          <p class="text-uppercase pull-center style1">
+            View Prediction Of Cyber Attack Type Details !!!
+          </p>
+          <hr>
+
+          <div class="table-container">
+            <table>
+              <tr>
+                <th>Fid</th>
+                <th>Timestamp</th>
+                <th>Source_IP_Address</th>
+                <th>Destination_IP_Address</th>
+                <th>Source_Port</th>
+                <th>Destination_Port</th>
+                <th>Protocol</th>
+                <th>Packet_Length</th>
+                <th>Packet_Type</th>
+                <th>Traffic_Type</th>
+                <th>Payload_Data</th>
+                <th>Malware_Indicators</th>
+                <th>Anomaly_Scores</th>
+                <th>Alerts_Warnings</th>
+                <th>Attack_Signature</th>
+                <th>Action_Taken</th>
+                <th>Severity_Level</th>
+                <th>Device_Information</th>
+                <th>Network_Segment</th>
+                <th>Geo_City_location_Data</th>
+                <th>Proxy_Information</th>
+                <th>Firewall_Logs</th>
+                <th>IDS_IPS_Alerts</th>
+                <th>Log_Source</th>
+                <th>Prediction</th>
+              </tr>
+
+              {% for object in list_objects %}
+              <tr>
+                <td>{{object.Fid}}</td>
+                <td>{{object.Timestamp}}</td>
+                <td>{{object.Source_IP_Address}}</td>
+                <td>{{object.Destination_IP_Address}}</td>
+                <td>{{object.Source_Port}}</td>
+                <td>{{object.Destination_Port}}</td>
+                <td>{{object.Protocol}}</td>
+                <td>{{object.Packet_Length}}</td>
+                <td>{{object.Packet_Type}}</td>
+                <td>{{object.Traffic_Type}}</td>
+                <td>{{object.Payload_Data}}</td>
+                <td>{{object.Malware_Indicators}}</td>
+                <td>{{object.Anomaly_Scores}}</td>
+                <td>{{object.Alerts_Warnings}}</td>
+                <td>{{object.Attack_Signature}}</td>
+                <td>{{object.Action_Taken}}</td>
+                <td>{{object.Severity_Level}}</td>
+                <td>{{object.Device_Information}}</td>
+                <td>{{object.Network_Segment}}</td>
+                <td>{{object.Geo_City_location_Data}}</td>
+                <td>{{object.Proxy_Information}}</td>
+                <td>{{object.Firewall_Logs}}</td>
+                <td>{{object.IDS_IPS_Alerts}}</td>
+                <td>{{object.Log_Source}}</td>
+                <td>{{object.Prediction}}</td>
+              </tr>
+              {% endfor %}
+            </table>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

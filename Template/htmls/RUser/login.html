@@ -1,0 +1,205 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | AI E-Gov Portal</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      min-height: 100vh;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .navbar {
+      background-color: #28a745;
+      padding: 10px 20px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+    .navbar-brand {
+      color: white !important;
+      font-weight: bold;
+      font-size: 1.3rem;
+    }
+    .navbar-nav .nav-link {
+      color: white !important;
+      margin-right: 20px;
+      transition: color 0.3s ease;
+    }
+    .navbar-nav .nav-link:hover {
+      color: #d4edda !important;
+    }
+
+    .main-container {
+      flex-grow: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .login-card {
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      padding: 40px 30px;
+      max-width: 450px;
+      width: 100%;
+      text-align: center;
+      animation: fadeIn 0.8s ease-in-out;
+    }
+
+    .login-card img {
+      width: 80px;
+      margin-bottom: 15px;
+    }
+
+    .login-card h3 {
+      color: #28a745;
+      font-weight: bold;
+      margin-bottom: 25px;
+    }
+
+    .btn-primary {
+      background-color: #28a745;
+      border: none;
+      transition: background 0.3s ease;
+    }
+    .btn-primary:hover {
+      background-color: #218838;
+    }
+
+    .register-link {
+      display: inline-block;
+      margin-top: 20px;
+      color: #28a745;
+      font-weight: 600;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    .register-link:hover {
+      color: #218838;
+    }
+
+    .forgot-password-link {
+      display: block;
+      margin-top: 5px;
+      margin-bottom: 20px;
+      color: #28a745;
+      font-weight: 500;
+      text-decoration: none;
+      transition: color 0.3s ease;
+      text-align: right;
+      font-size: 0.9rem;
+    }
+    .forgot-password-link:hover {
+      color: #218838;
+      text-decoration: underline;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="{% url 'index' %}">
+        AI E-Gov Portal
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon" style="filter: invert(1);"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item"><a class="nav-link" href="{% url 'index' %}">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'Register1' %}">Register</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'serviceproviderlogin' %}">Admin (Dashboard)</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Login Section -->
+  <div class="main-container">
+    <div class="login-card">
+      {% if messages %}
+      {% for message in messages %}
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+      <script>
+        Swal.fire({
+          icon: '{{ message.tags }}' === 'error' ? 'error' : 'success',
+          title: '{{ message }}',
+        });
+      </script>
+      {% endfor %}
+
+      {% endif %}
+
+      {% if login_success %}
+      <script>
+        setTimeout(() => {
+          window.location.href = "{% url 'ViewYourProfile' %}";
+        }, 2000);
+      </script>
+      {% endif %}
+
+      <form method="POST" autocomplete="off">
+        {% csrf_token %}
+
+        <!-- FIXED STATIC IMAGE PATH -->
+        <img src="{% static 'images/Login.jpg' %}" alt="Login Icon">
+
+        <h3>User Login</h3>
+
+        <div class="mb-3 text-start">
+          <label for="username" class="form-label">Username</label>
+          <input type="text" class="form-control" name="username" id="username" placeholder="Enter username" required>
+        </div>
+
+        <div class="mb-3 text-start">
+          <label for="password" class="form-label">Password</label>
+          <div class="input-group">
+            <input type="password" class="form-control" name="password" id="password" placeholder="Enter password" minlength="8" title="Password must contain at least 8 characters" required>
+            <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+              <i class="bi bi-eye" id="toggleIcon"></i>
+            </button>
+          </div>
+        </div>
+
+        <a href="{% url 'forgot_password' %}" class="forgot-password-link">Forgot Password?</a>
+
+        <button type="submit" name="submit1" class="btn btn-primary btn-lg w-100">Login</button>
+
+        <a href="{% url 'Register1' %}" class="register-link">New User? Register Here</a>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const togglePassword = document.querySelector('#togglePassword');
+    const password = document.querySelector('#password');
+    const toggleIcon = document.querySelector('#toggleIcon');
+
+    if (togglePassword && password) {
+      togglePassword.addEventListener('click', function (e) {
+        const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+        password.setAttribute('type', type);
+        toggleIcon.classList.toggle('bi-eye');
+        toggleIcon.classList.toggle('bi-eye-slash');
+      });
+    }
+  </script>
+</body>
+</html>

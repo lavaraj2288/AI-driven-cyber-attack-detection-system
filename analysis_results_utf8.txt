@@ -1,0 +1,84 @@
+﻿--- Shape ---
+(5641, 25)
+
+--- Columns ---
+['Fid', 'Timestamp', 'Source_IP_Address', 'Destination_IP_Address', 'Source_Port', 'Destination_Port', 'Protocol', 'Packet_Length', 'Packet_Type', 'Traffic_Type', 'Payload_Data', 'Malware_Indicators', 'Anomaly_Scores', 'Alerts_Warnings', 'Attack_Type', 'Attack_Signature', 'Action_Taken', 'Severity_Level', 'Device_Information', 'Network_Segment', 'Geo_City_location_Data', 'Proxy_Information', 'Firewall_Logs', 'IDS_IPS_Alerts', 'Log_Source']
+
+--- Data Types ---
+Fid                        object
+Timestamp                  object
+Source_IP_Address          object
+Destination_IP_Address     object
+Source_Port                 int64
+Destination_Port            int64
+Protocol                   object
+Packet_Length               int64
+Packet_Type                object
+Traffic_Type               object
+Payload_Data               object
+Malware_Indicators         object
+Anomaly_Scores            float64
+Alerts_Warnings            object
+Attack_Type                object
+Attack_Signature           object
+Action_Taken               object
+Severity_Level             object
+Device_Information         object
+Network_Segment            object
+Geo_City_location_Data     object
+Proxy_Information          object
+Firewall_Logs              object
+IDS_IPS_Alerts             object
+Log_Source                 object
+dtype: object
+
+--- Missing Values ---
+Fid                          0
+Timestamp                    0
+Source_IP_Address            0
+Destination_IP_Address       0
+Source_Port                  0
+Destination_Port             0
+Protocol                     0
+Packet_Length                0
+Packet_Type                  0
+Traffic_Type                 0
+Payload_Data                 0
+Malware_Indicators        2777
+Anomaly_Scores               0
+Alerts_Warnings              0
+Attack_Type                  0
+Attack_Signature             0
+Action_Taken                 0
+Severity_Level               0
+Device_Information           0
+Network_Segment              0
+Geo_City_location_Data       0
+Proxy_Information         2787
+Firewall_Logs             2869
+IDS_IPS_Alerts            2824
+Log_Source                   0
+dtype: int64
+
+--- Duplicate Rows ---
+0
+
+--- Target Class Distribution (Attack_Type) ---
+Attack_Type
+Malware      1901
+Intrusion    1871
+DDoS         1869
+Name: count, dtype: int64
+
+--- Unique Values in Categorical Columns ---
+Protocol: 3 unique values
+Packet_Type: 2 unique values
+Traffic_Type: 3 unique values
+Severity_Level: 3 unique values
+Action_Taken: 3 unique values
+
+--- Numerical Column Stats ---
+Packet_Length - Mean: 791.79, Min: 64, Max: 1500
+Anomaly_Scores - Mean: 49.91, Min: 0.0, Max: 99.99
+Source_Port - Mean: 32805.20, Min: 1031, Max: 65521
+Destination_Port - Mean: 33113.53, Min: 1030, Max: 65535
